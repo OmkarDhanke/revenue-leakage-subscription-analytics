@@ -12,4 +12,4 @@
         3.  **The Leaky Bucket:** Partial payments incorrectly marked as settled.
 * **Scope Decision:** Confirmed focus is strictly on operational billing failures, not marketing churn.
 
-👉 **[Read the Detailed Day 1 Report](docs\day_01_business_logic.md)**
+👉 **[Read the Detailed Day 1 Report](docs/day_01_business_logic.md)**
