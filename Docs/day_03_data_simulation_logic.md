@@ -1,70 +1,58 @@
 # Day 3: Data Simulation & Chaos Strategy
 
-## 1.0 Simulation Scope (Global Parameters)
-
-We are generating a controlled dataset that is small enough to validate manually but complex enough to require SQL for analysis.
-
-* **Time Horizon:** 12 Months (January 1, 2024 – December 31, 2024).
-* **Entity Volume:** 1,000 Unique Customers.
-* **Billing Cadence:** Monthly (Invoices generated on the 1st or anniversary date).
-* **Product Catalog:**
-    * **Basic:** $10.00 / month
-    * **Pro:** $50.00 / month
-    * **Enterprise:** $200.00 / month
+## 1.0 Volume Parameters (The Scale)
+* **Time Period:** 1 Year (Jan 2024 – Dec 2024).
+* **Total Customers:** 1,000.
+* **Plans:** 3 Tiers (Basic $10, Pro $50, Enterprise $200).
+* **Billing Frequency:** Monthly.
 
 ---
 
-## 2.0 The "Chaos Matrix" (Anomaly Injection)
-
-This section defines the precise logic to "break" the data. This simulated leakage is what we will "discover" in our later analysis.
+## 2.0 The "Chaos Matrix" (Designing the Leakage)
+*(How we break the data without an explicit 'Invoice Status' column)*
 
 ### Scenario A: The "Ghost Subscriber" (Missing Invoices)
-* **Business Definition:** Active service, no bill generated.
-* **Injection Logic (Python Rule):**
-    * Iterate through active subscriptions.
-    * **Condition:** Random < 0.015 (1.5% Probability per month).
-    * **Action:** **SKIP** generating a row in the invoices table for this month.
+* **The Logic:** The customer has `subscriptions.status = 'Active'`, but for a specific month, **NO row exists** in the invoices table.
+* **Injection Rate:** 1.5% of active subscriptions per month.
+* **Mechanism:** During the monthly iteration, skip the invoice generation step for these selected users.
 * **Data Signature:**
-    * `subscriptions.status = 'Active' AND invoices.invoice_id IS NULL` (for current period).
+    * `subscriptions.status = 'Active'` AND `invoices.invoice_id IS NULL` (for current period).
 
 ### Scenario B: The "Zombie Account" (Unpaid & Active)
-* **Business Definition:** User stopped paying, but system failed to cut access.
-* **Injection Logic (Python Rule):**
-    * Iterate through generated invoices.
-    * **Condition:** Random < 0.02 (2.0% Probability).
-    * **Action:**
-        * Do **NOT** generate a row in payments.
-        * Force `subscriptions.status` to remain 'Active' despite `today > invoice.due_date + 60`.
-* **Data Signature:**
-    * `invoices.status = 'Unpaid' AND subscriptions.status = 'Active' AND datediff(now, due_date) > 30`.
+* **The Logic:** An invoice exists, but **NO row exists** in the payments table. Crucially, the user's subscription status remains 'Active' long after the grace period.
+* **Injection Rate:** 2% of total invoices.
+* **Mechanism:**
+    1.  Create the Invoice row.
+    2.  Skip creating the matching Payment row.
+    3.  Force `subscriptions.status` to remain 'Active' regardless of non-payment.
+* **Grace Period Logic:**
+    * **Payment Terms:** Net-14 (Due 14 days after invoice).
+    * **Zombie Classification:** Applies only after a **30-day grace period** beyond the due date.
+    * **SQL Check:** `current_date > (due_date + 30 days)`.
 
 ### Scenario C: The "Leaky Bucket" (Partial Payments)
-* **Business Definition:** Payment received is less than invoiced, but system marks it "Settled".
-* **Injection Logic (Python Rule):**
-    * Iterate through valid payments.
-    * **Condition:** Random < 0.03 (3.0% Probability).
-    * **Action:**
-        * Calculate `payment_amount = invoice.amount * random.uniform(0.90, 0.99)`.
-        * Set `invoices.status = 'Settled'`.
+* **The Logic:** A row exists in payments, but the `amount_paid` is **less than** the `invoices.amount`.
+* **Note:** Invoice settlement state will be **derived during analysis** based on the presence and amount of the payment record.
+* **Injection Rate:** 3% of total payments.
+* **Mechanism:**
+    1.  Create Payment row.
+    2.  Set `amount_paid = invoice_amount * random.uniform(0.90, 0.99)`.
 * **Data Signature:**
-    * `invoices.status = 'Settled' AND payments.amount_paid < invoices.amount`.
+    * `payments.amount_paid < invoices.amount` (Resulting in a derived status of 'Partially Paid').
 
 ---
 
-## 3.0 "Normal Noise" (False Positives)
-*(Designing Reality)*
+## 3.0 Designing "Normal Noise" (False Positives)
+*(Realism Factors)*
 
-To ensure the analysis is realistic, we must include "messy" data that is valid, ensuring we don't flag correct behavior as errors.
+### Churn (Cancellations)
+* **Rule:** 8-10% of users cancel.
+* **Mechanism:** Update `subscriptions.status` to 'Cancelled'. Stop generating new invoices after that date.
 
-### 3.1 Legitimate Churn
-* **Rule:** 8-10% of users will cancel their subscription during the year.
-* **Mechanism:** Update `subscriptions.status` to 'Cancelled' and stop generating future invoices.
-* **Why:** A user stopping payment **after** cancelling is **not** leakage; it is correct behavior.
-
-### 3.2 Late Payments (Cash Flow Delay)
-* **Rule:** 10% of payments occur after the `due_date`.
-* **Mechanism:** `payment_date = due_date + random.randint(1, 20)`.
-* **Why:** These must be filtered out. They are not "Zombies" because the money eventually arrives.
+### Late Payments (Cash Flow Delay)
+* **Rule:** 10% of payments happen after `due_date`.
+* **Mechanism:** `payment_date` is > `due_date`, but `amount_paid == invoice_amount`.
+* **Result:** This is valid revenue, not a leak.
 
 ---
 
@@ -74,17 +62,12 @@ To ensure the analysis is realistic, we must include "messy" data that is valid,
 * **Customers:** 1,000
 * **Timeline:** 2024-01-01 to 2024-12-31
 
-**Anomaly Rules (The Leakage):**
-* **Missing Invoices (Error Code 101):**
-    * Frequency: ~1.5% of Active Subs per month.
-    * Mechanism: Skip invoice row creation.
-* **Unpaid Accounts (Error Code 102):**
-    * Frequency: ~2.0% of total invoices.
-    * Mechanism: No payment row + Force Sub Active.
-* **Partial Payments (Error Code 103):**
-    * Frequency: ~3.0% of total payments.
-    * Mechanism: `amount_paid = invoice_amount * (0.90 to 0.99)`.
+**Anomaly Rules:**
+* **Missing Invoices:** Skip invoice row creation (1.5% chance).
+* **Unpaid Accounts:** Create invoice but skip payment row creation (2.0% chance).
+* **Partial Payments:** Create payment where `amount_paid < invoice_amount` (3.0% chance).
 
 **Business Logic:**
-* **Payment Terms:** Net-14 (Due 14 days after invoice).
-* **Churn Rate:** 8% annual churn (Stop invoice generation).
+* **Payment Terms:** Net-14.
+* **Grace Period:** 30 days (Total 44 days from Invoice Date before "Zombie" status).
+* **Churn Rate:** 8% annual churn.

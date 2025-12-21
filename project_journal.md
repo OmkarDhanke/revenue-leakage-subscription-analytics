@@ -32,9 +32,9 @@
 * **Status:** ✅ Complete
 * **The "Chaos Matrix" (Defined Error Rates):**
     1.  **Ghost Subscribers:** 1.5% probability (Missing Invoices).
-    2.  **Zombie Accounts:** 2.0% probability (Unpaid + Active).
-    3.  **Leaky Bucket:** 3.0% probability (Partial Payments).
-* **Realism Factor:** Defined "Normal Noise" rules, including legitimate churn (8-10%) and late payments, to ensure the analysis handles false positives.
+    2.  **Zombie Accounts:** 2.0% probability (Unpaid + Active). Added **Grace Period Logic** (Net-14 + 30 days) to distinguish zombies from late payers.
+    3.  **Leaky Bucket:** 3.0% probability. Defined that settlement status will be **derived** via SQL, not hardcoded.
+* **Realism Factor:** Included "Normal Noise" (8-10% churn, 10% late payments) to prevent false positives.
 * **Constraint:** Set dataset scope to 1,000 customers over a 12-month period (2024).
 
 👉 **[Read the Detailed Simulation Logic](Docs/day_03_data_simulation_logic.md)**
