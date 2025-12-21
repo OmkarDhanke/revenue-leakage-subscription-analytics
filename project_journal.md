@@ -19,9 +19,22 @@
 
 * **Status:** ✅ Complete
 * **Key Output:** Defined the 5-table schema:
-    * [cite_start]**Reference:** `customers`, `plans`[cite: 56, 60, 65].
-    * [cite_start]**Transactional:** `subscriptions`, `invoices`, `payments`[cite: 57, 71, 76, 81].
-* [cite_start]**Validation:** Conducted a "Mental Walkthrough" to ensure the schema supports SQL queries for Ghost, Zombie, and Leaky Bucket scenarios[cite: 91, 94, 98, 102].
-* [cite_start]**Design Choice:** Utilized `DECIMAL` data types for financial accuracy[cite: 69].
+    * **Reference:** `customers`, `plans`.
+    * **Transactional:** `subscriptions`, `invoices`, `payments`.
+* **Validation:** Conducted a "Mental Walkthrough" to ensure the schema supports SQL queries for Ghost, Zombie, and Leaky Bucket scenarios.
+* **Design Choice:** Utilized `DECIMAL` data types for financial accuracy.
 
 👉 **[Read the Detailed Data Design Doc](Docs/day_02_data_design.md)**
+
+## Day 3: Simulation Strategy & Chaos Matrix
+**Focus:** Designed the Python logic to generate synthetic data with "Intentional Flaws."
+
+* **Status:** ✅ Complete
+* **The "Chaos Matrix" (Defined Error Rates):**
+    1.  **Ghost Subscribers:** 1.5% probability (Missing Invoices).
+    2.  **Zombie Accounts:** 2.0% probability (Unpaid + Active).
+    3.  **Leaky Bucket:** 3.0% probability (Partial Payments).
+* **Realism Factor:** Defined "Normal Noise" rules, including legitimate churn (8-10%) and late payments, to ensure the analysis handles false positives.
+* **Constraint:** Set dataset scope to 1,000 customers over a 12-month period (2024).
+
+👉 **[Read the Detailed Simulation Logic](Docs/day_03_data_simulation_logic.md)**
