@@ -1,0 +1,4 @@
+plan_id,plan_name,monthly_price
+1,Basic,10.0
+2,Pro,50.0
+3,Enterprise,200.0

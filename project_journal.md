@@ -38,3 +38,16 @@
 * **Constraint:** Set dataset scope to 1,000 customers over a 12-month period (2024).
 
 👉 **[Read the Detailed Simulation Logic](Docs/day_03_data_simulation_logic.md)**
+
+## Day 4: Python Data Simulation
+**Focus:** Engineered the synthetic dataset using Python (Pandas) to mimic a "broken" billing engine.
+
+* **Status:** ✅ Complete
+* **Key Output:** Generated 5 CSV files containing ~11,000 billing records.
+* **Chaos Implemented:**
+    * Injected **1.5% Ghost Subscribers** (Active users missing invoices).
+    * Injected **2.0% Zombie Accounts** (Active users who never paid).
+    * Injected **3.0% Partial Payments** (Subtle revenue erosion).
+* **Technical Check:** Enforced `np.random.seed(42)` to ensure the data is reproducible for anyone who clones the repo.
+
+👉 **[Read the Detailed Python Logic](Docs/day_04_data_generation.md)**

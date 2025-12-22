@@ -81,7 +81,7 @@ This structure ensures data integrity and supports complex SQL Joins.
 
 ## 3.0 Entity Relationship Diagram (ERD) Logic
 
-![ERD Diagram](docs/Image/ERD.png)  
+![ERD Diagram](Docs/image/ERD.png)  
 
 The relationship flow follows a strict hierarchy to ensure data integrity:
 1.  `customers` **purchase** `subscriptions` (1 : Many).
