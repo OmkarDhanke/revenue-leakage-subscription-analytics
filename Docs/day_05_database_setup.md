@@ -109,3 +109,22 @@ SELECT 'Invoices', COUNT(*) FROM invoices
 UNION ALL
 SELECT 'Payments', COUNT(*) FROM payments;
 ``` 
+
+### Query 2: Relationship Integrity Test
+
+**Confirm joins work from Payments → Customers.**
+
+```SQL
+SELECT 
+    c.customer_name,
+    p.plan_name,
+    i.amount AS invoice_amount,
+    pay.amount_paid
+FROM customers c
+JOIN subscriptions s ON c.customer_id = s.customer_id
+JOIN plans p ON s.plan_id = p.plan_id
+JOIN invoices i ON s.sub_id = i.sub_id
+LEFT JOIN payments pay ON i.invoice_id = pay.invoice_id
+LIMIT 5;
+
+``` 
