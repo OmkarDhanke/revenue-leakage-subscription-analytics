@@ -51,3 +51,14 @@
 * **Technical Check:** Enforced `np.random.seed(42)` to ensure the data is reproducible for anyone who clones the repo.
 
 👉 **[Read the Detailed Python Logic](Docs/day_04_data_generation.md)**
+
+## Day 5: Database Provisioning & Data Loading
+**Focus:** Created the MySQL schema and imported the synthetic data to prepare for SQL analysis.
+
+* **Status:** ✅ Complete
+* **Key Actions:**
+    * Executed DDL scripts to build the 5-table relational schema.
+    * Imported CSVs following strict Parent-Child order (Customers -> Invoices -> Payments).
+* **Validation:** Verified row counts confirmed the presence of the "Zombie" anomaly (Invoices > Payments).
+
+👉 **[Read the Database Setup Log](Docs/day_05_database_setup.md)**
