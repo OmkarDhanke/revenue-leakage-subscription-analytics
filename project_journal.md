@@ -62,3 +62,13 @@
 * **Validation:** Verified row counts confirmed the presence of the "Zombie" anomaly (Invoices > Payments).
 
 👉 **[Read the Database Setup Log](Docs/day_05_database_setup.md)**
+
+## Day 6: Data Quality Assurance
+**Focus:** Validated database integrity and confirmed the presence of revenue anomalies.
+
+* **Status:** ✅ Complete
+* **Technical Checks:** Passed (0 duplicates, 0 orphans, 0 time-travel errors).
+* **Sanity Check:** Confirmed `Total Invoiced > Total Collected`, validating that the dataset contains unpaid "Zombie" accounts.
+* **Anomaly Confirmation:** Successfully detected specific counts of Partial Payments and Unpaid Invoices using SQL.
+
+👉 **[Read the Data Quality Report](Docs/day_06_data_quality_report.md)**
