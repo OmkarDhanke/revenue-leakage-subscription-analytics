@@ -1,6 +1,5 @@
 # Project Phase 5: Database Provisioning & Data Loading
 
----
 
 ## 1.0 Environment Setup
 
@@ -8,7 +7,6 @@
 * **Tool:** MySQL Workbench / DBeaver / Command Line
 * **Goal:** Create a persistent storage layer for the 11,000+ records generated in Phase 4.
 
----
 
 ## 2.0 DDL Scripts (Create Tables)
 
