@@ -1,5 +1,5 @@
-CREATE DATABASE PRoject;
-USE Project;
+CREATE DATABASE cloudflow_billing;
+USE cloudflow_billing;
 
 
 CREATE TABLE customers(

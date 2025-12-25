@@ -72,3 +72,13 @@
 * **Anomaly Confirmation:** Successfully detected specific counts of Partial Payments and Unpaid Invoices using SQL.
 
 👉 **[Read the Data Quality Report](Docs/day_06_data_quality_report.md)**
+
+## Day 7: Revenue Waterfall Analysis
+**Focus:** Quantified the financial impact of the billing errors using SQL.
+
+* **Status:** ✅ Complete
+* **Key Findings:**
+    * **Collection Gap:** Identified a consistent monthly variance (approx. 98% recovery rate), resulting in **$1,247.95** lost in September alone.
+    * **Generation Gap:** The spot check showed a variance of -$80.00, indicating that while Ghost Subscribers exist, their financial impact was temporarily masked by new customer acquisition in September.
+
+👉 **[Read the Preliminary Insights](Docs/day_07_preliminary_insights.md)**
