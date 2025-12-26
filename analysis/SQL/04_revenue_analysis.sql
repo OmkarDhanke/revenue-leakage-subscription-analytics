@@ -10,7 +10,8 @@ SELECT
     CASE WHEN (SUM(i.amount) - SUM(COALESCE(p.amount_paid, 0))) > 0 THEN 'Leakage Detected' ELSE '✅ Healthy' END AS Audit_Status,
     ROUND((SUM(COALESCE(p.amount_paid, 0)) / SUM(i.amount)) * 100, 2) AS Recovery_Rate
 FROM invoices i
-LEFT JOIN payments p ON i.invoice_id = p.invoice_id
+LEFT JOIN payments p 
+ON i.invoice_id = p.invoice_id
 GROUP BY DATE_FORMAT(i.invoice_date, '%Y-%m')
 ORDER BY Month;
 
@@ -23,7 +24,8 @@ SELECT
     'Expected Revenue' AS Metric_Type,
     SUM(pl.monthly_price) AS Amount
 FROM subscriptions s
-JOIN plans pl ON s.plan_id = pl.plan_id
+JOIN plans pl 
+ON s.plan_id = pl.plan_id
 WHERE s.start_date <= '2024-09-01' 
   AND (s.end_date >= '2024-09-30' OR s.status = 'Active'); 
 

@@ -82,3 +82,14 @@
     * **Generation Gap:** The spot check showed a variance of -$80.00, indicating that while Ghost Subscribers exist, their financial impact was temporarily masked by new customer acquisition in September.
 
 👉 **[Read the Preliminary Insights](Docs/day_07_preliminary_insights.md)**
+
+## Day 8: Identify & Classify Leakage
+**Focus:** Identified the specific `invoice_ids` and `sub_ids` responsible for revenue loss.
+
+* **Status:** ✅ Complete
+* **Action:** Executed `05_forensic_analysis.sql`.
+* **Key Output:** Created the `leakage_report` table.
+    * This "Hit List" consolidates Zombies, Ghosts, and Partial Payments into a single view.
+    * Standardized the schema so all leakage types have a `leakage_amount` and `leakage_category`.
+
+👉 **[Read the Forensic Analysis Doc](Docs/day_08_root_cause_analysis.md)**

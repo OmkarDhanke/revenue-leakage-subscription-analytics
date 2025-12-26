@@ -1,32 +1,34 @@
 CREATE DATABASE cloudflow_billing;
 USE cloudflow_billing;
 
-
+-- customers
 CREATE TABLE customers(
-    customers_id INT PRIMARY KEY ,
-    customers_name VARCHAR(50),
+    customer_id INT PRIMARY KEY ,
+    customer_name VARCHAR(50),
     Email VARCHAR(100),
     Region VARCHAR(50)
 );
 
+-- plans
 CREATE TABLE plans(
     plan_id INT PRIMARY KEY,
-    plans_name VARCHAR(50),
+    plan_name VARCHAR(50),
     monthly_price DECIMAL(10,2)
 );
 
-
+-- subscriptions
 CREATE TABLE subscriptions(
 	Sub_id INT PRIMARY KEY,
-    customers_id INT,
+    customer_id INT,
     Plan_id INT,
     Start_Date DATE,
     End_date Date ,
     Status VARCHAR(50),
-    FOREIGN KEY (customers_id) REFERENCES customers(customers_id),
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
     FOREIGN KEY (Plan_id) REFERENCES plans(Plan_id)
 );
 
+-- invoices
 CREATE TABLE invoices(
 	invoice_id INT PRIMARY KEY,
     Sub_id INT,
@@ -36,6 +38,7 @@ CREATE TABLE invoices(
     FOREIGN KEY (Sub_id) REFERENCES subscriptions(Sub_id)
 );
 
+-- payments
 CREATE TABLE payments(
 	payment_id INT PRIMARY KEY,
     invoice_id INT,
