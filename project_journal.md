@@ -3,7 +3,7 @@
 ## Day 1: Business Thinking & Data Design
 **Focus:** Defined the business context for "CloudFlow" (B2B SaaS) and mapped the revenue leakage scenarios.
 
-* **Status:** ✅ Complete
+
 * **Key Achievements:**
     * Mapped the "Order-to-Cash" operational workflow to identify failure points.
     * Defined 3 critical leakage scenarios:
@@ -17,7 +17,6 @@
 ## Day 2: Data Architecture & Schema Design
 **Focus:** Designed the Relational Database schema to support the leakage analysis.
 
-* **Status:** ✅ Complete
 * **Key Output:** Defined the 5-table schema:
     * **Reference:** `customers`, `plans`.
     * **Transactional:** `subscriptions`, `invoices`, `payments`.
@@ -29,7 +28,6 @@
 ## Day 3: Simulation Strategy & Chaos Matrix
 **Focus:** Designed the Python logic to generate synthetic data with "Intentional Flaws."
 
-* **Status:** ✅ Complete
 * **The "Chaos Matrix" (Defined Error Rates):**
     1.  **Ghost Subscribers:** 1.5% probability (Missing Invoices).
     2.  **Zombie Accounts:** 2.0% probability (Unpaid + Active). Added **Grace Period Logic** (Net-14 + 30 days) to distinguish zombies from late payers.
@@ -42,7 +40,6 @@
 ## Day 4: Python Data Simulation
 **Focus:** Engineered the synthetic dataset using Python (Pandas) to mimic a "broken" billing engine.
 
-* **Status:** ✅ Complete
 * **Key Output:** Generated 5 CSV files containing ~11,000 billing records.
 * **Chaos Implemented:**
     * Injected **1.5% Ghost Subscribers** (Active users missing invoices).
@@ -55,7 +52,6 @@
 ## Day 5: Database Provisioning & Data Loading
 **Focus:** Created the MySQL schema and imported the synthetic data to prepare for SQL analysis.
 
-* **Status:** ✅ Complete
 * **Key Actions:**
     * Executed DDL scripts to build the 5-table relational schema.
     * Imported CSVs following strict Parent-Child order (Customers -> Invoices -> Payments).
@@ -66,7 +62,6 @@
 ## Day 6: Data Quality Assurance
 **Focus:** Validated database integrity and confirmed the presence of revenue anomalies.
 
-* **Status:** ✅ Complete
 * **Technical Checks:** Passed (0 duplicates, 0 orphans, 0 time-travel errors).
 * **Sanity Check:** Confirmed `Total Invoiced > Total Collected`, validating that the dataset contains unpaid "Zombie" accounts.
 * **Anomaly Confirmation:** Successfully detected specific counts of Partial Payments and Unpaid Invoices using SQL.
@@ -76,7 +71,6 @@
 ## Day 7: Revenue Waterfall Analysis
 **Focus:** Quantified the financial impact of the billing errors using SQL.
 
-* **Status:** ✅ Complete
 * **Key Findings:**
     * **Collection Gap:** Identified a consistent monthly variance (approx. 98% recovery rate), resulting in **$1,247.95** lost in September alone.
     * **Generation Gap:** The spot check showed a variance of -$80.00, indicating that while Ghost Subscribers exist, their financial impact was temporarily masked by new customer acquisition in September.
@@ -86,10 +80,19 @@
 ## Day 8: Identify & Classify Leakage
 **Focus:** Identified the specific `invoice_ids` and `sub_ids` responsible for revenue loss.
 
-* **Status:** ✅ Complete
 * **Action:** Executed `05_forensic_analysis.sql`.
 * **Key Output:** Created the `leakage_report` table.
     * This "Hit List" consolidates Zombies, Ghosts, and Partial Payments into a single view.
     * Standardized the schema so all leakage types have a `leakage_amount` and `leakage_category`.
 
 👉 **[Read the Forensic Analysis Doc](Docs/day_08_root_cause_analysis.md)**
+
+## Day 9: Trends & Aggregations (Business Intelligence)
+**Focus:** Aggregated the granular forensic data into high-level business insights using SQL.
+
+* **Key Insights:**
+    * **Highest Loss Month:** March 2024 ($2,424.20).
+    * **Primary Driver:** "Unpaid Invoices" account for **90.31%** of all lost revenue ($16,570).
+    * **High Risk Segment:** The **Enterprise Plan** is the biggest bleeder, losing $13k compared to 800 for Basic plans.
+
+👉 **[Read the Executive Summary](Docs/day_09_executive_summary.md)**
